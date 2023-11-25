@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@element-plus/icons-vue':
+    specifier: ^2.1.0
+    version: registry.npmmirror.com/@element-plus/icons-vue@2.1.0(vue@3.3.8)
   axios:
     specifier: ^1.6.2
     version: registry.npmmirror.com/axios@1.6.2
