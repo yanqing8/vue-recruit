@@ -12,18 +12,29 @@ import {
 } from '@element-plus/icons-vue'
 import avatar from '@/assets/default.png'
 import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/index.js'
+import { onMounted } from 'vue'
+
 const router = useRouter()
 
-const navigateTo = (path, param) => {
-  if (param) {
-    // 如果 param 存在，带参数跳转路由
-    router.push({
-      path: path,
-      query: { isRegister: param }
-    })
-  } else {
-    // 如果 param 不存在，直接跳转路由
-    router.push(path)
+// 获取用户信息
+const userStore = useUserStore()
+onMounted(() => {
+  if (userStore.token) {
+    userStore.getUser()
+  }
+})
+
+const handleCommand = (command) => {
+  switch (command) {
+    case 'logout':
+      userStore.removeToken()
+      userStore.setUser({})
+      router.push('/login')
+      break
+    default:
+      router.push(`/user/${command}`)
+      break
   }
 }
 </script>
@@ -75,30 +86,28 @@ const navigateTo = (path, param) => {
     </el-aside>
     <el-container>
       <el-header>
-        <div>打工人：<strong>小帅鹏</strong></div>
-        <el-dropdown placement="bottom-end">
+        <div>
+          <span v-show="userStore.user.role === 0">管理员：</span>
+          <span v-show="userStore.user.role === 1">大老板：</span>
+          <span v-show="userStore.user.role === 2">打工人：</span>
+          <strong>{{
+            userStore.user.nickname || userStore.user.username
+          }}</strong>
+        </div>
+        <el-dropdown placement="bottom-end" @command="handleCommand">
           <span class="el-dropdown__box">
-            <el-avatar :src="avatar" />
+            <el-avatar :src="userStore.user.userPic || avatar" />
             <el-icon><CaretBottom /></el-icon>
           </span>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item
-                @click="navigateTo('/user/profile')"
-                command="profile"
-                :icon="User"
+              <el-dropdown-item command="profile" :icon="User"
                 >基本资料</el-dropdown-item
               >
-              <el-dropdown-item
-                @click="navigateTo('/user/avatar')"
-                command="avatar"
-                :icon="Crop"
+              <el-dropdown-item command="avatar" :icon="Crop"
                 >更换头像</el-dropdown-item
               >
-              <el-dropdown-item
-                @click="navigateTo('/user/password')"
-                command="password"
-                :icon="EditPen"
+              <el-dropdown-item command="password" :icon="EditPen"
                 >重置密码</el-dropdown-item
               >
               <el-dropdown-item command="logout" :icon="SwitchButton"

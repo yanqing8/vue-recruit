@@ -11,17 +11,27 @@ import {
 import avatar from '@/assets/default.png'
 import logo from '@/assets/logo.png'
 import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/index.js'
+import { onMounted } from 'vue'
 const router = useRouter()
-const navigateTo = (path, param) => {
-  if (param) {
-    // 如果 param 存在，带参数跳转路由
-    router.push({
-      path: path,
-      query: { isRegister: param }
-    })
-  } else {
-    // 如果 param 不存在，直接跳转路由
-    router.push(path)
+// 获取用户信息
+const userStore = useUserStore()
+onMounted(() => {
+  if (userStore.token) {
+    userStore.getUser()
+  }
+})
+
+const handleCommand = (command) => {
+  switch (command) {
+    case 'logout':
+      userStore.removeToken()
+      userStore.setUser({})
+      router.push('/login')
+      break
+    default:
+      router.push(`/user/${command}`)
+      break
   }
 }
 </script>
@@ -38,15 +48,38 @@ const navigateTo = (path, param) => {
           </div>
         </router-link>
         <div style="margin-left: 20px">
-          <el-button @click="navigateTo('/login', 'false')" type="primary" plain
+          <el-button
+            v-show="userStore.token === ''"
+            @click="
+              router.push({
+                path: '/login',
+                query: { isRegister: 'false' }
+              })
+            "
+            type="primary"
+            plain
             >登录</el-button
           >
-          <el-button @click="navigateTo('/login', 'true')" type="success" plain
+          <el-button
+            v-show="userStore.token === ''"
+            @click="
+              router.push({
+                path: '/login',
+                query: { isRegister: 'true' }
+              })
+            "
+            type="success"
+            plain
             >注册</el-button
           >
-          <span style="font-weight: normal; font-size: 20px; color: #fc5531">
+          <span
+            v-show="userStore.token !== ''"
+            style="font-weight: normal; font-size: 20px; color: #fc5531"
+          >
             您好！
-            <strong style="color: black"> 檐晴 </strong>
+            <strong style="color: black">
+              {{ userStore.user.nickname || userStore.user.username }}
+            </strong>
           </span>
         </div>
       </div>
@@ -75,29 +108,20 @@ const navigateTo = (path, param) => {
           <span>求职信息</span>
         </el-menu-item>
       </el-menu>
-      <el-dropdown placement="bottom-end">
+      <el-dropdown placement="bottom-end" @command="handleCommand">
         <span class="el-dropdown__box">
-          <el-avatar :src="avatar" />
+          <el-avatar :src="userStore.user.userPic || avatar" />
           <el-icon><CaretBottom /></el-icon>
         </span>
         <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item
-              @click="navigateTo('/user/profile')"
-              command="profile"
-              :icon="User"
+          <el-dropdown-menu v-show="userStore.token !== ''">
+            <el-dropdown-item command="profile" :icon="User"
               >基本资料</el-dropdown-item
             >
-            <el-dropdown-item
-              @click="navigateTo('/user/avatar')"
-              command="avatar"
-              :icon="Crop"
+            <el-dropdown-item command="avatar" :icon="Crop"
               >更换头像</el-dropdown-item
             >
-            <el-dropdown-item
-              @click="navigateTo('/user/password')"
-              command="password"
-              :icon="EditPen"
+            <el-dropdown-item command="password" :icon="EditPen"
               >重置密码</el-dropdown-item
             >
             <el-dropdown-item command="logout" :icon="SwitchButton"

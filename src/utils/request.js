@@ -2,8 +2,7 @@ import axios from 'axios'
 import { useUserStore } from '@/stores'
 import { ElMessage } from 'element-plus'
 import router from '@/router'
-
-const baseURL = 'http://big-event-vue-api-t.itheima.net'
+const baseURL = '/api'
 
 const instance = axios.create({
   baseURL,
@@ -31,7 +30,8 @@ instance.interceptors.response.use(
       return res
     }
     // 处理业务失败,给错误提示，抛出错误
-    ElMessage.error(res.data.message | '服务器错误')
+    console.log(res.data.message)
+    ElMessage.error(res.data.message || '服务异常')
     return Promise.reject(res.data)
   },
   (err) => {
@@ -42,7 +42,7 @@ instance.interceptors.response.use(
     }
 
     // 错误的默认情况
-    ElMessage.error(err.response.data.message | '服务器错误')
+    ElMessage.error(err.response.data.message || '服务异常')
     return Promise.reject(err)
   }
 )

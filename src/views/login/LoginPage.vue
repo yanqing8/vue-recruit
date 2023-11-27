@@ -2,13 +2,18 @@
 import { User, Lock } from '@element-plus/icons-vue'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { userRegisterService, userLoginService } from '@/api/user.js'
+import { useUserStore } from '@/stores/index.js'
+import { useRouter } from 'vue-router'
 const route = useRoute()
 const isRegister = ref(route.query.isRegister === 'true' ? true : false)
-// 注册
+const form = ref()
+
 const formModel = ref({
   username: '',
   password: '',
-  repassword: ''
+  rePassword: '',
+  role: ''
 })
 // 规则
 const rules = {
@@ -28,7 +33,7 @@ const rules = {
       trigger: 'blur'
     }
   ],
-  repassword: [
+  rePassword: [
     { required: true, message: '请输入密码', trigger: 'blur' },
     {
       pattern: /^\S{6,20}$/,
@@ -46,7 +51,32 @@ const rules = {
       },
       trigger: 'blur'
     }
-  ]
+  ],
+  role: [{ required: true, message: '请选择角色', trigger: 'change' }]
+}
+// 注册
+const register = async () => {
+  // 注册成功成功之前先校验
+  await form.value.validate()
+  // console.log('开始注册请求', formModel.value)
+  await userRegisterService(formModel.value)
+  ElMessage.success('注册成功')
+  // 跳转到登录页面
+  isRegister.value = false
+}
+
+const userStore = useUserStore()
+const router = useRouter()
+// 登录
+const login = async () => {
+  // 登录成功成功之前先校验
+  await form.value.validate()
+  const res = await userLoginService(formModel.value)
+  ElMessage.success('登录成功')
+  // 保存用户信息token
+  userStore.setToken(res.data.data)
+  // 跳转到首页
+  router.push('/')
 }
 </script>
 
@@ -81,16 +111,27 @@ const rules = {
               placeholder="请输入密码"
             ></el-input>
           </el-form-item>
-          <el-form-item prop="repassword">
+          <el-form-item prop="rePassword">
             <el-input
-              v-model="formModel.repassword"
+              v-model="formModel.rePassword"
               :prefix-icon="Lock"
               type="password"
               placeholder="请输入再次密码"
             ></el-input>
           </el-form-item>
+          <el-form-item label="角色" prop="role">
+            <el-select v-model="formModel.role" placeholder="请选择你的身份">
+              <el-option label="HR" value="1"></el-option>
+              <el-option label="求职者" value="2"></el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item>
-            <el-button class="button" type="primary" auto-insert-space>
+            <el-button
+              @click="register()"
+              class="button"
+              type="primary"
+              auto-insert-space
+            >
               注册
             </el-button>
           </el-form-item>
@@ -127,7 +168,11 @@ const rules = {
             </div>
           </el-form-item>
           <el-form-item>
-            <el-button class="button" type="primary" auto-insert-space
+            <el-button
+              @click="login()"
+              class="button"
+              type="primary"
+              auto-insert-space
               >登录</el-button
             >
           </el-form-item>
