@@ -7,8 +7,6 @@ import HomeInner from '@/views/layout/components/HomeInner.vue'
     <home-main></home-main>
     <div class="home-inner">
       <home-inner></home-inner>
-      <home-inner></home-inner>
-      <home-inner></home-inner>
     </div>
   </div>
 </template>

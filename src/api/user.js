@@ -35,5 +35,15 @@ export const updateUserAvatarService = (imageUrl) => {
 
 // 修改密码application/json数据格式
 export const updateUserPasswordService = (passwordData) => {
-  return request.patch('user/updatePwd', passwordData)
+  return request.patch('/user/updatePwd', passwordData)
+}
+
+// 管理员新增用户
+export const userAddService = (params) => {
+  return request.post('/user/add', params)
+}
+
+// 管理员重置用户密码
+export const userResetPasswordService = (id) => {
+  return request.patch('/user/resetPwd', null, { params: { id } })
 }

@@ -141,7 +141,14 @@ const login = async () => {
             </el-link>
           </el-form-item>
         </el-form>
-        <el-form ref="form" size="large" autocomplete="off" v-else>
+        <el-form
+          :model="formModel"
+          :rules="rules"
+          ref="form"
+          size="large"
+          autocomplete="off"
+          v-else
+        >
           <el-form-item>
             <h1>登录</h1>
           </el-form-item>

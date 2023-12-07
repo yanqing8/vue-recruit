@@ -1,60 +1,32 @@
+<script setup>
+import { onMounted, ref } from 'vue'
+import { jobGetRecuitmentsService } from '@/api/job.js'
+
+const hotJobList = ref([])
+// 定义请求参数
+const params = ref({
+  pageNum: 1,
+  pageSize: 9,
+  type: '0', // 招聘信息
+  state: '1' // 审核通过的
+})
+const getHotJobList = async () => {
+  const res = await jobGetRecuitmentsService(params.value)
+  hotJobList.value = res.data.data.items
+}
+onMounted(() => {
+  getHotJobList()
+})
+</script>
 <template>
   <section class="inner-item">
     <h3 class="section-wrap-title">热门岗位</h3>
     <ul>
-      <li>
+      <li v-for="item in hotJobList" :key="item.id">
         <div class="home-card">
-          <img src="@/assets/login_bg.jpg" alt="" />
+          <img :src="item.imgUrl" alt="" />
           <div class="home-card-info">
-            <p>今天是个坏日子</p>
-          </div>
-        </div>
-      </li>
-      <li>
-        <div class="home-card">
-          <img src="@/assets/login_bg.jpg" alt="" />
-          <div class="home-card-info">
-            <p>今天是个坏日子</p>
-          </div>
-        </div>
-      </li>
-      <li>
-        <div class="home-card">
-          <img src="@/assets/login_bg.jpg" alt="" />
-          <div class="home-card-info">
-            <p>今天是个坏日子</p>
-          </div>
-        </div>
-      </li>
-      <li>
-        <div class="home-card">
-          <img src="@/assets/login_bg.jpg" alt="" />
-          <div class="home-card-info">
-            <p>今天是个坏日子</p>
-          </div>
-        </div>
-      </li>
-      <li>
-        <div class="home-card">
-          <img src="@/assets/login_bg.jpg" alt="" />
-          <div class="home-card-info">
-            <p>今天是个坏日子</p>
-          </div>
-        </div>
-      </li>
-      <li>
-        <div class="home-card">
-          <img src="@/assets/login_bg.jpg" alt="" />
-          <div class="home-card-info">
-            <p>今天是个坏日子</p>
-          </div>
-        </div>
-      </li>
-      <li>
-        <div class="home-card">
-          <img src="@/assets/login_bg.jpg" alt="" />
-          <div class="home-card-info">
-            <p>今天是个坏日子</p>
+            <p>{{ item.title }}</p>
           </div>
         </div>
       </li>

@@ -25,7 +25,6 @@ instance.interceptors.request.use(
 // 响应拦截器
 instance.interceptors.response.use(
   (res) => {
-    // TODO 4. 摘取核心响应数据
     if (res.data.code == 0) {
       return res
     }
@@ -35,14 +34,17 @@ instance.interceptors.response.use(
     return Promise.reject(res.data)
   },
   (err) => {
-    // TODO 5. 处理401错误
     // 权限不足，token过期，跳转登录页
     if (err.response?.status === 401) {
+      ElMessage.error('您还未登录或您的登录已过期，请登录')
+      // 移除token
+      const userStore = useUserStore()
+      if (userStore.token) userStore.removeToken()
       router.push('/login')
+    } else {
+      // 错误的默认情况
+      ElMessage.error(err.response.data.message || '服务异常')
     }
-
-    // 错误的默认情况
-    ElMessage.error(err.response.data.message || '服务异常')
     return Promise.reject(err)
   }
 )

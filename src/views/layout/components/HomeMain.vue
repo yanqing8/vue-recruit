@@ -27,43 +27,43 @@ const sliders = ref([
         router
       >
         <el-menu-item index="/">
-          <span>Java开发</span>
+          <span>互联网IT</span>
           <el-icon><CaretRight /></el-icon>
         </el-menu-item>
         <el-menu-item index="/">
-          <span>Java开发</span>
+          <span>金融</span>
           <el-icon><CaretRight /></el-icon>
         </el-menu-item>
         <el-menu-item index="/">
-          <span>Java开发</span>
+          <span>建筑</span>
           <el-icon><CaretRight /></el-icon>
         </el-menu-item>
         <el-menu-item index="/">
-          <span>Java开发</span>
+          <span>物流</span>
           <el-icon><CaretRight /></el-icon>
         </el-menu-item>
         <el-menu-item index="/">
-          <span>Java开发</span>
+          <span>广告</span>
           <el-icon><CaretRight /></el-icon>
         </el-menu-item>
         <el-menu-item index="/">
-          <span>Java开发</span>
+          <span>服务业</span>
           <el-icon><CaretRight /></el-icon>
         </el-menu-item>
         <el-menu-item index="/">
-          <span>Java开发</span>
+          <span>销售</span>
           <el-icon><CaretRight /></el-icon>
         </el-menu-item>
         <el-menu-item index="/">
-          <span>Java开发</span>
+          <span>人事</span>
           <el-icon><CaretRight /></el-icon>
         </el-menu-item>
         <el-menu-item index="/">
-          <span>Java开发</span>
+          <span>财务</span>
           <el-icon><CaretRight /></el-icon>
         </el-menu-item>
         <el-menu-item index="/">
-          <span>Java开发</span>
+          <span>教育</span>
           <el-icon><CaretRight /></el-icon>
         </el-menu-item>
       </el-menu>

@@ -8,7 +8,11 @@ import {
   EditPen,
   SwitchButton,
   Document,
-  CaretBottom
+  CaretBottom,
+  Connection,
+  Menu,
+  HelpFilled,
+  DocumentChecked
 } from '@element-plus/icons-vue'
 import avatar from '@/assets/default.png'
 import { useRouter } from 'vue-router'
@@ -25,9 +29,14 @@ onMounted(() => {
   }
 })
 
-const handleCommand = (command) => {
+const handleCommand = async (command) => {
   switch (command) {
     case 'logout':
+      await ElMessageBox.confirm('此操作将退出登录, 是否继续?', '提示', {
+        type: 'warning',
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      })
       userStore.removeToken()
       userStore.setUser({})
       router.push('/login')
@@ -46,17 +55,25 @@ const handleCommand = (command) => {
         <div class="el-aside__logo"></div>
       </router-link>
       <el-menu
+        unique-opened
         active-text-color="#ffca28"
         background-color="#465d6b"
         :default-active="$route.path"
         text-color="#fff"
         router
       >
-        <el-menu-item index="/user/job">
-          <el-icon><Promotion /></el-icon>
-          <span>应聘管理</span>
+        <el-menu-item index="/user/category">
+          <el-icon><Connection /></el-icon>
+          <span>职位分类</span>
         </el-menu-item>
-        <el-menu-item index="/user/recruit">
+        <el-menu-item :disabled="userStore.user.role == 1" index="/user/job">
+          <el-icon><Promotion /></el-icon>
+          <span>求职管理</span>
+        </el-menu-item>
+        <el-menu-item
+          :disabled="userStore.user.role == 2"
+          index="/user/recruit"
+        >
           <el-icon><Grid /></el-icon>
           <span>招聘管理</span>
         </el-menu-item>
@@ -80,6 +97,32 @@ const handleCommand = (command) => {
           <el-menu-item index="/user/password">
             <el-icon><EditPen></EditPen></el-icon>
             <span>修改密码</span>
+          </el-menu-item>
+          <el-menu-item index="/user/member">
+            <el-icon><HelpFilled /></el-icon>
+            <span>成为会员</span>
+          </el-menu-item>
+        </el-sub-menu>
+        <el-sub-menu index="/admin" v-if="userStore.user.role == 0">
+          <template #title>
+            <el-icon><Menu></Menu></el-icon>
+            <span>系统管理</span>
+          </template>
+          <el-menu-item index="/user/list">
+            <el-icon><User></User></el-icon>
+            <span>用户管理</span>
+          </el-menu-item>
+          <el-menu-item index="/user/audit">
+            <el-icon><DocumentChecked /></el-icon>
+            <span>审核管理</span>
+          </el-menu-item>
+          <el-menu-item index="/user/order">
+            <el-icon><Document /></el-icon>
+            <span>订单管理</span>
+          </el-menu-item>
+          <el-menu-item index="/user/picture">
+            <el-icon><Crop></Crop></el-icon>
+            <span>图片管理</span>
           </el-menu-item>
         </el-sub-menu>
       </el-menu>
@@ -132,7 +175,7 @@ const handleCommand = (command) => {
     background-color: #465d6b;
     &__logo {
       height: 120px;
-      background: url('@/assets/login01.png') no-repeat center / 160px auto;
+      background: url('@/assets/sb.png') no-repeat center / 160px auto;
     }
     .el-menu {
       border-right: none;

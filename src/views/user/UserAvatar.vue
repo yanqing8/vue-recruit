@@ -23,9 +23,7 @@ const submit = async () => {
   }
 
   // 上传文件
-  const formData = new FormData()
-  formData.append('file', imgFile.value)
-  const res = await uploadImageService(formData)
+  const res = await uploadImageService(imgFile.value)
   console.log(res.data.data)
   await updateUserAvatarService(res.data.data)
   // 更新仓库数据

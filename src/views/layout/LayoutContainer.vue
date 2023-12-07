@@ -6,10 +6,11 @@ import {
   Crop,
   EditPen,
   SwitchButton,
-  CaretBottom
+  CaretBottom,
+  Position
 } from '@element-plus/icons-vue'
 import avatar from '@/assets/default.png'
-import logo from '@/assets/logo.png'
+// import logo from '@/assets/logo.png'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/index.js'
 import { onMounted } from 'vue'
@@ -22,9 +23,14 @@ onMounted(() => {
   }
 })
 
-const handleCommand = (command) => {
+const handleCommand = async (command) => {
   switch (command) {
     case 'logout':
+      await ElMessageBox.confirm('此操作将退出登录, 是否继续?', '提示', {
+        type: 'warning',
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      })
       userStore.removeToken()
       userStore.setUser({})
       router.push('/login')
@@ -41,9 +47,9 @@ const handleCommand = (command) => {
       <div>
         <router-link to="/home">
           <div>
-            <img :src="logo" height="40" alt="" />
+            <!-- <img :src="logo" height="40" alt="" /> -->
             <span style="color: cornsilk; font-size: 35px; font-weight: bolder"
-              >招聘网</span
+              >怀化市人员招聘管理系统</span
             >
           </div>
         </router-link>
@@ -106,6 +112,10 @@ const handleCommand = (command) => {
             <Management />
           </el-icon>
           <span>求职信息</span>
+        </el-menu-item>
+        <el-menu-item index="/user">
+          <el-icon><Position /></el-icon>
+          <span>进入后台</span>
         </el-menu-item>
       </el-menu>
       <el-dropdown placement="bottom-end" @command="handleCommand">
