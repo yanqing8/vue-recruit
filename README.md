@@ -1,22 +1,24 @@
 # vue-recruit
 
-This template should help get you started developing with Vue 3 in Vite.
+这是招聘系统vue3前端代码，[数据库以及后端传送门](https://github.com/yanqing8/spring-recruit)。如果能帮到你可以帮忙点个小星星吗？
 
-## Recommended IDE Setup
+## 配置
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+node.js 16获更高。
 
-## Customize configuration
+建议使用pnpm管理器 
+```sh
+npm install -g pnpm
+```
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
 
-## Project Setup
+## 安装依赖
 
 ```sh
 pnpm install
 ```
 
-### Compile and Hot-Reload for Development
+### 启动程序
 
 ```sh
 pnpm dev

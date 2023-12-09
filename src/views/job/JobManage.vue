@@ -53,7 +53,6 @@ const onEditJob = (row) => {
 }
 // 删除
 const onDeleteJob = async (row) => {
-  // console.log(row)
   await ElMessageBox.confirm('此操作将永久删除所选列表, 是否继续?', '提示', {
     type: 'warning',
     confirmButtonText: '确定',

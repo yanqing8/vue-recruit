@@ -1,7 +1,10 @@
 <script setup>
 import { Search } from '@element-plus/icons-vue'
 import { onMounted, ref } from 'vue'
-import { jobGetRecuitmentsService } from '@/api/job.js'
+import {
+  jobGetRecuitmentsService,
+  jobDeleteRecuitmentService
+} from '@/api/job.js'
 import { Delete, Edit } from '@element-plus/icons-vue'
 import { useUserStore } from '@/stores'
 import { useRouter } from 'vue-router'
@@ -48,8 +51,21 @@ const onEditJob = (row) => {
   drawerRef.value.open(row)
 }
 // 删除
-const onDeleteJob = async (row) => {
-  console.log(row)
+const onDeleteJob = async (jobId) => {
+  await ElMessageBox.confirm('此操作将永久删除所选列表, 是否继续?', '提示', {
+    type: 'warning',
+    confirmButtonText: '确定',
+    cancelButtonText: '取消'
+  })
+  // 把jobId，存入数组
+  const ids = [jobId]
+  if (ids.length === 0) {
+    ElMessage.warning('请选择要删除的列表')
+    return
+  }
+  await jobDeleteRecuitmentService(ids)
+  ElMessage.success('删除成功')
+  getJobList()
 }
 
 // 分页
@@ -156,7 +172,11 @@ const onSuccess = (type) => {
           <el-button-group>
             <!-- 根据row.createUser === userStore.user.id 是否禁用操作 -->
             <el-button @click="onEditJob(row)" type="primary" :icon="Edit" />
-            <el-button @click="onDeleteJob(row)" type="danger" :icon="Delete" />
+            <el-button
+              @click="onDeleteJob(row.id)"
+              type="danger"
+              :icon="Delete"
+            />
           </el-button-group>
         </template>
       </el-table-column>
